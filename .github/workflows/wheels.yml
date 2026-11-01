@@ -60,7 +60,7 @@ jobs:
           cibw_image: quay.io/pypa/manylinux_2_28_x86_64
           timeout_minutes: 350
         - os: macos
-          runs_on: macos-14
+          runs_on: macos-15
           cibw_archs: arm64
           timeout_minutes: 350
     steps:
@@ -124,9 +124,9 @@ jobs:
         #     search path so bare -licudata / -licuuc / -licui18n flags pulled
         #     in transitively by Boost can be resolved.
         CIBW_ENVIRONMENT_MACOS: >-
-          MACOSX_DEPLOYMENT_TARGET=14.0
-          CC=/opt/homebrew/opt/llvm/bin/clang
-          CXX=/opt/homebrew/opt/llvm/bin/clang++
+          MACOSX_DEPLOYMENT_TARGET=15.0
+          CC=/opt/homebrew/opt/llvm@22/bin/clang
+          CXX=/opt/homebrew/opt/llvm@22/bin/clang++
           LIBRARY_PATH=/opt/homebrew/opt/icu4c@78/lib
 
         CIBW_BEFORE_ALL_MACOS: bash tools/wheels/before_all_macos.sh
@@ -230,6 +230,7 @@ jobs:
   test-linux-glibc:
     name: test-linux-glibc-${{ matrix.py }}
     needs: build
+    if: ${{ !cancelled() }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
